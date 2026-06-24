@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOON Prompt Pro — Unlimited TOON Prompt Generator</title>
-<meta name="description" content="Free unlimited TOON prompt generator. Convert JSON to TOON, build structured prompts, powered by the official @toon-format/toon library. No limits, no login.">
+<title>TOON Prompt Pro</title>
+<meta name="description" content="Convert any text or JSON to TOON format for better LLM prompts. Free, unlimited, no login.">
 <style>
 :root {
   --bg: #0d1117;
@@ -15,118 +15,80 @@
   --accent: #58a6ff;
   --accent2: #3fb950;
   --accent3: #d2a8ff;
-  --danger: #f85149;
-  --warning: #d29922;
   --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 ::selection { background: #264f78; }
 a { color: var(--accent); }
-.container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
-/* Header */
-header { border-bottom: 1px solid var(--border); padding: 16px 0; background: var(--surface); position: sticky; top: 0; z-index: 100; }
-header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.logo span { font-size: 0.75rem; color: var(--text-dim); background: var(--bg); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); -webkit-text-fill-color: var(--text-dim); }
-.header-links { display: flex; gap: 16px; align-items: center; font-size: 0.85rem; }
+header { border-bottom: 1px solid var(--border); padding: 14px 0; background: var(--surface); }
+header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.logo { display: flex; align-items: center; gap: 8px; }
+.logo h1 { font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.badge { font-size: .65rem; background: #1f2937; color: var(--accent2); padding: 2px 8px; border-radius: 10px; border: 1px solid #2d4a2d; }
+.header-links { display: flex; gap: 12px; align-items: center; font-size: .8rem; }
 .header-links a { color: var(--text-dim); text-decoration: none; }
 .header-links a:hover { color: var(--text); }
-.badge { font-size: 0.7rem; background: #1f2937; color: var(--accent2); padding: 2px 8px; border-radius: 10px; border: 1px solid #2d4a2d; }
 
-/* Tabs */
-.tabs { display: flex; gap: 2px; margin-bottom: 0; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; }
-.tab-btn { padding: 10px 18px; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.85rem; border-bottom: 2px solid transparent; white-space: nowrap; transition: all .15s; }
-.tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-.tab-panel { display: none; padding: 24px 0; }
-.tab-panel.active { display: block; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; }
+.card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+.card p.sub { font-size: .8rem; color: var(--text-dim); margin-bottom: 14px; }
 
-/* Cards */
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-.card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
-.card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--text-dim); }
-.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media (max-width: 800px) { .card-grid { grid-template-columns: 1fr; } }
+/* Mode pills */
+.mode-pills { display: flex; gap: 4px; background: var(--bg); border-radius: 8px; padding: 3px; margin-bottom: 14px; }
+.mode-pills label { padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: .82rem; color: var(--text-dim); transition: all .15s; }
+.mode-pills input:checked + label { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.mode-pills input { display: none; }
 
 /* Forms */
-label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; color: var(--text-dim); }
-textarea, input, select { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.875rem; font-family: var(--mono); transition: border-color .15s; outline: none; }
+textarea, input, select { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: .875rem; font-family: var(--mono); outline: none; transition: border .15s; }
 textarea:focus, input:focus, select:focus { border-color: var(--accent); }
-textarea { resize: vertical; min-height: 120px; }
-input[type="text"], input[type="number"] { font-family: var(--mono); }
-select { cursor: pointer; }
-.form-group { margin-bottom: 14px; }
+textarea { resize: vertical; min-height: 100px; }
+.form-group { margin-bottom: 12px; }
 
-/* Buttons */
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: all .15s; text-decoration: none; }
+/* Options bar */
+.opt-bar { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 14px; }
+.opt-group { display: flex; align-items: center; gap: 6px; }
+.opt-group label { font-size: .78rem; color: var(--text-dim); }
+.opt-group select, .opt-group input { width: auto; min-width: 80px; padding: 5px 8px; font-size: .78rem; }
+.opt-hint { font-size: .72rem; color: var(--text-dim); max-width: 200px; line-height: 1.3; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 6px; font-size: .85rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: all .15s; }
 .btn:hover { border-color: var(--accent); color: var(--accent); }
 .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .btn-primary:hover { filter: brightness(1.15); color: #fff; }
-.btn-accent2 { background: var(--accent2); color: #000; border-color: var(--accent2); }
-.btn-accent2:hover { filter: brightness(1.15); color: #000; }
-.btn-danger { color: var(--danger); border-color: var(--danger); }
-.btn-danger:hover { background: var(--danger); color: #fff; }
-.btn-sm { padding: 4px 10px; font-size: 0.78rem; }
-.btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.btn-sm { padding: 5px 12px; font-size: .78rem; }
 
-/* Output */
-.output-box { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 16px; min-height: 100px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; overflow-x: auto; position: relative; max-height: 500px; overflow-y: auto; }
+.output-box { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 16px; font-family: var(--mono); font-size: .85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; min-height: 80px; max-height: 500px; overflow: auto; }
 
-/* Stats bar */
-.stats { display: flex; gap: 16px; flex-wrap: wrap; margin: 10px 0; font-size: 0.8rem; color: var(--text-dim); }
-.stat { display: flex; align-items: center; gap: 4px; }
+.stats { display: flex; gap: 12px; flex-wrap: wrap; font-size: .78rem; color: var(--text-dim); margin: 8px 0; }
 .stat strong { color: var(--text); }
+.savings-tag { color: var(--accent2); font-weight: 600; }
 
-/* Template cards */
-.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-.template-card { padding: 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all .15s; background: var(--bg); }
-.template-card:hover { border-color: var(--accent); background: rgba(88,166,255,0.05); }
-.template-card h4 { font-size: 0.85rem; margin-bottom: 4px; }
-.template-card p { font-size: 0.78rem; color: var(--text-dim); }
+.tip-box { background: #1c2333; border: 1px solid #2d3748; border-radius: 6px; padding: 12px 16px; font-size: .78rem; color: var(--text-dim); margin-top: 10px; }
+.tip-box strong { color: var(--accent3); }
 
-/* Compare section */
-.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 900px) { .compare-grid { grid-template-columns: 1fr; } }
-.compare-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
-.compare-box h4 { font-size: 0.8rem; margin-bottom: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
-.compare-box pre { font-family: var(--mono); font-size: 0.75rem; line-height: 1.4; white-space: pre-wrap; word-break: break-all; color: var(--text-dim); max-height: 300px; overflow-y: auto; }
-.compare-box .savings { font-size: 0.8rem; color: var(--accent2); font-weight: 600; margin-top: 8px; }
-
-/* Toast */
-.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-size: 0.85rem; z-index: 999; opacity: 0; transform: translateY(10px); transition: all .25s; pointer-events: none; }
+.toast { position: fixed; bottom: 20px; right: 20px; padding: 10px 18px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-size: .82rem; z-index: 999; opacity: 0; transform: translateY(10px); transition: all .25s; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast.success { border-color: var(--accent2); }
-.toast.error { border-color: var(--danger); }
+.toast.error { border-color: #f85149; }
 
-/* Two-column layout */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
-
-/* Method selector */
-.method-radio { display: flex; gap: 4px; background: var(--bg); border-radius: 6px; padding: 3px; margin-bottom: 16px; }
-.method-radio label { padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.82rem; color: var(--text-dim); transition: all .15s; margin-bottom: 0; }
-.method-radio input:checked + label { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-.method-radio input { display: none; }
-
-.util { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.text-dim { color: var(--text-dim); }
-.text-sm { font-size: 0.82rem; }
-.text-xs { font-size: 0.75rem; }
-.mt-8 { margin-top: 8px; }
-.mb-8 { margin-bottom: 8px; }
-.mt-16 { margin-top: 16px; }
-.mb-16 { margin-bottom: 16px; }
-code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,255,0.05); padding: 1px 5px; border-radius: 3px; }
-.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--text-dim); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 6px; }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--text-dim); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Option row */
-.option-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-.option-row label { font-size: 0.8rem; margin-bottom: 0; }
-.option-row select, .option-row input { width: auto; min-width: 100px; padding: 6px 10px; }
+.hidden { display: none; }
+
+/* Footer info */
+.footer-info { text-align: center; padding: 20px 0; font-size: .75rem; color: var(--text-dim); border-top: 1px solid var(--border); margin-top: 20px; }
+.footer-info a { color: var(--text-dim); }
+
+@media (max-width: 600px) {
+  .opt-bar { flex-direction: column; align-items: stretch; }
+  .opt-group { justify-content: space-between; }
+  .opt-hint { max-width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -135,554 +97,300 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
 <div class="container">
   <div class="logo">
     <h1>TOON Prompt Pro</h1>
-    <span class="badge">v2.0</span>
+    <span class="badge">v2</span>
   </div>
   <div class="header-links">
-    <span class="text-xs text-dim" id="headerStatus">100% client-side &middot; powered by @toon-format/toon</span>
-    <a href="https://github.com/toon-format/toon" target="_blank">Official Library</a>
-    <a href="https://github.com/toon-format/spec" target="_blank">TOON Spec</a>
+    <span class="text-sm text-dim" id="status">loading library...</span>
+    <a href="https://github.com/toon-format/toon" target="_blank">About TOON</a>
   </div>
 </div>
 </header>
 
 <div class="container">
 
-<!-- Tabs -->
-<div class="tabs">
-  <button class="tab-btn active" data-tab="builder">Prompt Builder</button>
-  <button class="tab-btn" data-tab="converter">JSON &harr; TOON</button>
-  <button class="tab-btn" data-tab="compare">Format Comparison</button>
-  <button class="tab-btn" data-tab="templates">Templates</button>
-  <button class="tab-btn" data-tab="about">About TOON</button>
-</div>
+<div class="card">
+  <h2>Convert to TOON</h2>
+  <p class="sub">Pick what you're converting, type it in, and click Generate. TOON is a compact format that uses fewer tokens than JSON for LLM prompts.</p>
 
-<!-- ========= TAB 1: PROMPT BUILDER ========= -->
-<div class="tab-panel active" id="panel-builder">
-  <div class="card-grid">
-    <div>
-      <div class="card">
-        <h2>Build Your TOON Prompt</h2>
-        <p class="text-sm text-dim mb-16">Paste JSON or write raw data. The official <code>@toon-format/toon</code> encoder handles conversion.</p>
-
-        <div class="method-radio">
-          <input type="radio" name="builder-mode" id="bm-json" value="json" checked>
-          <label for="bm-json">Paste JSON</label>
-          <input type="radio" name="builder-mode" id="bm-raw" value="raw">
-          <label for="bm-raw">Raw Data</label>
-        </div>
-
-        <div id="builder-json">
-          <div class="form-group">
-            <label>JSON Data</label>
-            <textarea id="json-input" rows="8" placeholder='[&#10;  { "id": 1, "name": "Alice", "role": "admin" },&#10;  { "id": 2, "name": "Bob", "role": "user" }&#10;]'></textarea>
-          </div>
-        </div>
-
-        <div id="builder-raw" style="display:none;">
-          <div class="form-group">
-            <label>Raw JavaScript object / array literal</label>
-            <textarea id="raw-input" rows="8" placeholder='{ "users": [{ "id": 1, "name": "Alice" }, { "id": 2, "name": "Bob" }] }'></textarea>
-          </div>
-        </div>
-
-        <div class="option-row">
-          <label>Delimiter:</label>
-          <select id="builder-delimiter">
-            <option value="comma">Comma (,)</option>
-            <option value="tab">Tab</option>
-            <option value="pipe">Pipe (|)</option>
-          </select>
-          <label>Indent:</label>
-          <select id="builder-indent">
-            <option value="0">0 (compact)</option>
-            <option value="2" selected>2 spaces</option>
-            <option value="4">4 spaces</option>
-          </select>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-primary" onclick="generatePrompt()">Generate TOON</button>
-          <button class="btn" onclick="copyOutput()">Copy</button>
-          <button class="btn" onclick="downloadToon()">Download .toon</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Debug / Raw Output</h2>
-        <div class="output-box" id="debug-box" style="font-size:0.75rem;color:var(--text-dim);min-height:40px;max-height:150px;">Ready. Enter JSON and click Generate TOON.</div>
-      </div>
-    </div>
-
-    <div>
-      <div class="card">
-        <h2>Generated TOON Output</h2>
-        <div class="stats" id="output-stats">
-          <span class="stat">Characters: <strong id="stat-chars">0</strong></span>
-          <span class="stat">Tokens (est): <strong id="stat-tokens">0</strong></span>
-          <span class="stat">vs JSON: <strong id="stat-savings">0%</strong></span>
-        </div>
-        <div class="output-box" id="toon-output">Your TOON output will appear here...</div>
-      </div>
-
-      <div class="card" style="display:none" id="json-compare-card">
-        <h2>Equivalent JSON (minified)</h2>
-        <div class="stats">
-          <span class="stat">Chars: <strong id="jchars">0</strong></span>
-          <span class="stat">Tokens: <strong id="jtokens">0</strong></span>
-        </div>
-        <div class="output-box" id="json-compare-output" style="max-height:150px;font-size:0.75rem;"></div>
-      </div>
-    </div>
+  <!-- Input mode -->
+  <div class="mode-pills">
+    <input type="radio" name="mode" id="mode-text" value="text" checked>
+    <label for="mode-text">Plain Text</label>
+    <input type="radio" name="mode" id="mode-json" value="json">
+    <label for="mode-json">JSON Data</label>
   </div>
-</div>
 
-<!-- ========= TAB 2: JSON &harr; TOON CONVERTER ========= -->
-<div class="tab-panel" id="panel-converter">
-  <div class="two-col">
-    <div class="card">
-      <h2>JSON &rarr; TOON</h2>
-      <div class="form-group">
-        <label>Paste JSON</label>
-        <textarea id="conv-json-input" rows="8" placeholder='[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]'></textarea>
-      </div>
-      <div class="option-row">
-        <label>Delimiter:</label>
-        <select id="conv-delimiter">
-          <option value="comma">Comma (,)</option>
-          <option value="tab">Tab</option>
-          <option value="pipe">Pipe (|)</option>
-        </select>
-        <label>Indent:</label>
-        <select id="conv-indent">
-          <option value="0">0 (compact)</option>
-          <option value="2" selected>2</option>
-          <option value="4">4</option>
-        </select>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="convertJsonToToon()">Convert</button>
-      </div>
-    </div>
-    <div class="card">
-      <h2>TOON &rarr; JSON</h2>
-      <div class="form-group">
-        <label>Paste TOON</label>
-        <textarea id="conv-toon-input" rows="8" placeholder='items[2]{id,name}:&#10;  1,Alice&#10;  2,Bob'></textarea>
-      </div>
-      <div class="option-row">
-        <label>Strict:</label>
-        <select id="conv-strict">
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="convertToonToJson()">Convert</button>
-      </div>
-    </div>
+  <!-- Text mode -->
+  <div class="form-group" id="input-text">
+    <textarea id="text-input" rows="6" placeholder="Type your prompt text here...&#10;&#10;Example: Write a professional email to a client about project delays">Write a professional email to a client about a 2-week delay in the Q3 roadmap due to supply chain issues. Apologize and offer a discount.</textarea>
   </div>
-  <div class="card">
-    <h2>Result</h2>
-    <div class="output-box" id="conv-output" style="min-height:80px;">Result will appear here...</div>
-    <div class="btn-group">
-      <button class="btn" onclick="copyEl('conv-output')">Copy</button>
-    </div>
-  </div>
-</div>
 
-<!-- ========= TAB 3: FORMAT COMPARISON ========= -->
-<div class="tab-panel" id="panel-compare">
-  <div class="card">
-    <h2>Token Cost Comparison</h2>
-    <p class="text-sm text-dim mb-16">See how much TOON saves vs JSON for the same data.</p>
-    <div class="form-group">
-      <label>Sample Data (JSON array or object)</label>
-      <textarea id="compare-data" rows="6">[
-  { "id": 1, "name": "Alice Johnson", "email": "alice@example.com", "role": "admin", "active": true },
-  { "id": 2, "name": "Bob Smith", "email": "bob@example.com", "role": "user", "active": true },
-  { "id": 3, "name": "Charlie Brown", "email": "charlie@example.com", "role": "user", "active": false }
+  <!-- JSON mode -->
+  <div class="form-group hidden" id="input-json">
+    <textarea id="json-input" rows="6" placeholder='Paste JSON here...&#10;&#10;[&#10;  { "id": 1, "name": "Alice", "role": "admin" },&#10;  { "id": 2, "name": "Bob", "role": "user" }&#10;]'>[
+  { "id": 1, "name": "Alice", "role": "admin", "active": true },
+  { "id": 2, "name": "Bob", "role": "user", "active": true }
 ]</textarea>
+  </div>
+
+  <!-- Options -->
+  <div class="opt-bar">
+    <div class="opt-group">
+      <label for="opt-delim">Delimiter:</label>
+      <select id="opt-delim">
+        <option value="comma">Comma (,)</option>
+        <option value="tab">Tab</option>
+        <option value="pipe">Pipe (|)</option>
+      </select>
     </div>
-    <button class="btn btn-primary" onclick="compareFormats()">Compare</button>
+    <div class="opt-hint">
+      <strong>Comma</strong> (default) — most readable. <strong>Tab</strong> saves ~5% more tokens. <strong>Pipe</strong> when your data contains commas.
+    </div>
+    <div class="opt-group">
+      <label for="opt-indent">Indent:</label>
+      <select id="opt-indent">
+        <option value="0">0 (compact)</option>
+        <option value="2" selected>2 spaces</option>
+        <option value="4">4 spaces</option>
+      </select>
+    </div>
+    <div class="opt-hint">
+      Indent adds spacing to nested data. <strong>0</strong> = smallest size, <strong>2</strong> = easy to read, <strong>4</strong> = very readable.
+    </div>
   </div>
-  <div class="compare-grid" id="compare-results"></div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+    <button class="btn btn-primary" onclick="generate()">Generate TOON</button>
+    <button class="btn btn-sm" onclick="copyOut()">Copy</button>
+    <button class="btn btn-sm" onclick="downloadOut()">Download</button>
+    <button class="btn btn-sm" onclick="swapToJson()" id="swap-btn" style="display:none;">Show as JSON</button>
+  </div>
 </div>
 
-<!-- ========= TAB 4: TEMPLATES ========= -->
-<div class="tab-panel" id="panel-templates">
-  <div class="card">
-    <h2>Prompt Templates</h2>
-    <p class="text-sm text-dim mb-16">Click a template to load pre-built JSON data into the Builder.</p>
-    <div class="template-grid" id="template-grid"></div>
+<!-- Output -->
+<div class="card">
+  <h2>TOON Output</h2>
+  <div class="stats">
+    <span class="stat">Chars: <strong id="stat-chars">—</strong></span>
+    <span class="stat">Est. tokens: <strong id="stat-tokens">—</strong></span>
+    <span class="stat" id="savings-row" style="display:none;">vs JSON: <strong class="savings-tag" id="stat-savings">—</strong> fewer tokens</span>
+  </div>
+  <div class="output-box" id="toon-output">Click "Generate TOON" to see the result.</div>
+
+  <div class="tip-box" id="tip-box">
+    <strong>Tip:</strong> TOON packs data tighter than JSON by declaring field names once, then listing values in rows. Use it in your LLM prompts to reduce token usage by 30–60%.
   </div>
 </div>
 
-<!-- ========= TAB 5: ABOUT TOON ========= -->
-<div class="tab-panel" id="panel-about">
-  <div class="card">
-    <h2>What is TOON?</h2>
-    <p><strong>Token-Oriented Object Notation</strong> (TOON) is a compact, line-oriented serialization format designed specifically for LLM interactions. It preserves the JSON data model while cutting token usage by 30-60%.</p>
+<!-- Templates -->
+<div class="card">
+  <h2>Quick Templates</h2>
+  <p class="sub">Click a template to load sample data, then Generate.</p>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+    <button class="btn btn-sm" onclick="loadTemplate('users')">👥 User Profiles</button>
+    <button class="btn btn-sm" onclick="loadTemplate('products')">📦 Products</button>
+    <button class="btn btn-sm" onclick="loadTemplate('tickets')">🎫 Support Tickets</button>
+    <button class="btn btn-sm" onclick="loadTemplate('training')">🧠 Training Data</button>
+    <button class="btn btn-sm" onclick="loadTemplate('code')">📝 Code Review</button>
+    <button class="btn btn-sm" onclick="loadTemplate('employees')">🏢 Employees</button>
   </div>
-  <div class="card">
-    <h2>How It Works</h2>
-    <p>JSON repeats field names for every single entry. TOON declares field names once at the top, then lists values in clean rows.</p>
-    <pre style="margin-top:10px;font-family:var(--mono);font-size:0.82rem;background:var(--bg);padding:12px;border-radius:6px;border:1px solid var(--border);">
-<span style="color:var(--accent3);">items[2]{id,name,role}:</span>
-  <span style="color:var(--warning);">1</span>,Alice,admin
-  <span style="color:var(--warning);">2</span>,Bob,user</pre>
-  </div>
-  <div class="card">
-    <h2>Token Savings</h2>
-    <p>The same data in JSON costs ~30-60% more tokens.</p>
-    <ul style="margin-top:8px;padding-left:20px;font-size:.85rem;color:var(--text-dim);">
-      <li><strong>Tabular (uniform objects):</strong> 40-60% savings</li>
-      <li><strong>Semi-structured:</strong> 15-30% savings</li>
-      <li><strong>Deeply nested:</strong> 30-40% savings</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h2>Key Benefits</h2>
-    <ul style="padding-left:20px;font-size:.85rem;color:var(--text-dim);">
-      <li><strong>Lower API bills</strong> — fewer tokens = less cost</li>
-      <li><strong>Faster responses</strong> — fewer tokens processed</li>
-      <li><strong>Better accuracy</strong> — structured format reduces ambiguity</li>
-      <li><strong>Lossless round-trip</strong> — convert between JSON and TOON freely</li>
-      <li><strong>Open standard</strong> — <a href="https://github.com/toon-format/spec">github.com/toon-format/spec</a></li>
-    </ul>
-  </div>
+</div>
+
+<div class="footer-info">
+  Powered by <a href="https://github.com/toon-format/toon">@toon-format/toon</a> &middot; 100% client-side &middot; No limits &middot; No login
 </div>
 
 </div><!-- /container -->
 
 <div class="toast" id="toast"></div>
 
-<!-- Load @toon-format/toon library from CDN -->
+<!-- → @toon-format/toon library from CDN -->
 <script type="module">
-import { encode, decode } from 'https://cdn.jsdelivr.net/npm/@toon-format/toon@1.2.0/+esm'
-import { DELIMITERS } from 'https://cdn.jsdelivr.net/npm/@toon-format/toon@1.2.0/+esm'
+import { encode, decode, DELIMITERS } from 'https://cdn.jsdelivr.net/npm/@toon-format/toon@1.2.0/+esm'
 
-// Expose to global scope for onclick handlers
-window.__toonEncode = encode
-window.__toonDecode = decode
-window.__toonDelimiters = DELIMITERS
-document.getElementById('headerStatus').textContent = 'Library loaded &middot; @toon-format/toon v1.2.0'
+window.__t = { encode, decode, DELIMITERS }
+window.__tReady = true
 
-// Re-run the last successful generation if any
-if (window.__pendingGenerate) window.__pendingGenerate()
+// Show library loaded
+document.getElementById('status').textContent = '✓ library loaded'
 
-console.log('TOON library loaded:', Object.keys(DELIMITERS))
+// Enable the button
+document.getElementById('status').style.color = '#3fb950'
+
+// Also show swap button can work
+console.log('TOON library ready:', Object.keys(DELIMITERS))
+
+// Auto-generate demo on first load
+if (!window.__tAutoGenDone) {
+  window.__tAutoGenDone = true
+  setTimeout(() => {
+    if (document.querySelector('input[name="mode"]:checked')?.value === 'text') {
+      generate()
+    }
+  }, 200)
+}
 </script>
 
 <script>
 // ============================================================
-// UTILITIES
+// UTILS
 // ============================================================
-function estimateTokens(text) { return Math.ceil(text.length / 4) }
+const $ = id => document.getElementById(id)
+const estimate = t => Math.ceil(t.length / 4)
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 
-function showToast(msg, type) {
-  const el = document.getElementById('toast')
-  el.textContent = msg; el.className = 'toast ' + type + ' show'
-  clearTimeout(el._timeout); el._timeout = setTimeout(() => el.classList.remove('show'), 2500)
+function toast(msg, type='success') {
+  const el = $('toast')
+  el.textContent = msg; el.className = `toast ${type} show`
+  clearTimeout(el._timer)
+  el._timer = setTimeout(() => el.classList.remove('show'), 2500)
 }
 
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-}
-
-function copyEl(id) {
-  const text = document.getElementById(id).textContent
-  navigator.clipboard.writeText(text).then(() => showToast('Copied!', 'success'))
+function waitLib(fn) {
+  if (window.__tReady) return fn()
+  let i = 0
+  const iv = setInterval(() => {
+    if (window.__tReady) { clearInterval(iv); fn() }
+    if (++i > 100) { clearInterval(iv); toast('Library failed to load', 'error') }
+  }, 100)
 }
 
 // ============================================================
-// TAB SYSTEM
+// MODE SWITCH
 // ============================================================
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
-    btn.classList.add('active')
-    document.getElementById('panel-' + btn.dataset.tab).classList.add('active')
+document.querySelectorAll('input[name="mode"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const v = r.value
+    $('input-text').classList.toggle('hidden', v !== 'text')
+    $('input-json').classList.toggle('hidden', v !== 'json')
   })
 })
 
 // ============================================================
-// BUILDER MODE SWITCH
+// RESOLVE OPTIONS
 // ============================================================
-document.querySelectorAll('input[name="builder-mode"]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    document.getElementById('builder-json').style.display = radio.value === 'json' ? 'block' : 'none'
-    document.getElementById('builder-raw').style.display = radio.value === 'raw' ? 'block' : 'none'
-  })
-})
-
-// ============================================================
-// RESOLVE DELIMITER
-// ============================================================
-function resolveDelimiter(selectId) {
-  const val = document.getElementById(selectId).value
-  if (val === 'comma') return ','
-  if (val === 'tab') return '\t'
-  if (val === 'pipe') return '|'
-  return ','
-}
-
-function resolveDelimiterKey(selectId) {
-  return document.getElementById(selectId).value // 'comma', 'tab', 'pipe'
+function getOpts() {
+  const d = { comma: ',', tab: '\t', pipe: '|' }
+  return {
+    delimiter: d[$('opt-delim').value] || ',',
+    indent: parseInt($('opt-indent').value) || 2,
+    delimKey: $('opt-delim').value
+  }
 }
 
 // ============================================================
-// WAIT FOR LIBRARY + GENERATE
+// GENERATE
 // ============================================================
-function withLibrary(fn) {
-  if (window.__toonEncode) return fn()
-  window.__pendingGenerate = fn
-  document.getElementById('debug-box').textContent = 'Loading @toon-format/toon library from CDN...'
-}
+let _lastToon = ''
+let _lastJson = ''
 
-// ============================================================
-// GENERATE PROMPT (Builder tab)
-// ============================================================
-function generatePrompt() {
-  withLibrary(() => {
+function generate() {
+  waitLib(() => {
     try {
-      const mode = document.querySelector('input[name="builder-mode"]:checked').value
-      let data
+      const mode = document.querySelector('input[name="mode"]:checked').value
+      const opts = getOpts()
+      let data, toonStr
 
-      if (mode === 'json') {
-        const raw = document.getElementById('json-input').value.trim()
-        if (!raw) { showToast('Paste JSON data first.', 'error'); return }
-        data = JSON.parse(raw)
+      if (mode === 'text') {
+        const text = $('text-input').value
+        if (!text.trim()) { toast('Enter some text first.', 'error'); return }
+        // Wrap plain text as a TOON prompt object
+        data = { prompt: text }
+        toonStr = window.__t.encode(data, {
+          delimiter: window.__t.DELIMITERS[opts.delimKey],
+          indent: opts.indent
+        })
+        _lastJson = JSON.stringify(data, null, 2)
       } else {
-        const raw = document.getElementById('raw-input').value.trim()
-        if (!raw) { showToast('Enter raw data first.', 'error'); return }
-        // Use Function constructor for safe eval of JS literals (objects, arrays, primitives)
-        data = new Function('"use strict"; return (' + raw + ')')()
+        const raw = $('json-input').value.trim()
+        if (!raw) { toast('Paste JSON first.', 'error'); return }
+        data = JSON.parse(raw)
+        toonStr = window.__t.encode(data, {
+          delimiter: window.__t.DELIMITERS[opts.delimKey],
+          indent: opts.indent
+        })
+        _lastJson = JSON.stringify(data)
       }
 
-      const delimKey = resolveDelimiterKey('builder-delimiter')
-      const indentVal = parseInt(document.getElementById('builder-indent').value)
-
-      const options = {
-        delimiter: window.__toonDelimiters[delimKey],
-        indent: indentVal,
-        keyFolding: 'off'
-      }
-
-      const toonStr = window.__toonEncode(data, options)
-      const jsonStr = JSON.stringify(data)
-
-      document.getElementById('debug-box').textContent =
-        'Input type: ' + (Array.isArray(data) ? 'Array[' + data.length + ']' : typeof data) +
-        ' | Delimiter: ' + delimKey +
-        ' | Indent: ' + indentVal +
-        ' | Library: @toon-format/toon v1.2.0'
-
-      displayResult(toonStr, jsonStr)
-
+      _lastToon = toonStr
+      display(toonStr, _lastJson)
+      toast('TOON generated!')
     } catch (e) {
-      document.getElementById('debug-box').textContent = 'Error: ' + e.message
-      showToast(e.message, 'error')
+      toast(e.message, 'error')
     }
   })
 }
 
-function displayResult(toonStr, jsonStr) {
-  const out = document.getElementById('toon-output')
-  out.textContent = toonStr
+function display(toonStr, jsonStr) {
+  $('toon-output').textContent = toonStr
+  const tc = toonStr.length, tt = estimate(toonStr)
+  $('stat-chars').textContent = tc
+  $('stat-tokens').textContent = tt
 
-  const tChars = toonStr.length
-  const tTokens = estimateTokens(toonStr)
-  document.getElementById('stat-chars').textContent = tChars
-  document.getElementById('stat-tokens').textContent = tTokens
-
-  // Show JSON comparison
-  const jChars = jsonStr.length
-  const jTokens = estimateTokens(jsonStr)
-  document.getElementById('jchars').textContent = jChars
-  document.getElementById('jtokens').textContent = jTokens
-  document.getElementById('json-compare-output').textContent = jsonStr
-  document.getElementById('json-compare-card').style.display = 'block'
-
-  // Savings
-  const savings = jTokens > 0 ? Math.round((1 - tTokens / jTokens) * 100) : 0
-  document.getElementById('stat-savings').textContent = savings + '%'
-
-  // Store for copy/download
-  window.__lastToon = toonStr
+  if (jsonStr) {
+    const jc = jsonStr.length, jt = estimate(jsonStr)
+    const sv = jt > 0 ? Math.round((1 - tt / jt) * 100) : 0
+    $('stat-savings').textContent = sv + '%'
+    $('savings-row').style.display = 'inline'
+    $('swap-btn').style.display = ''
+    $('swap-btn').dataset.json = jsonStr
+  } else {
+    $('savings-row').style.display = 'none'
+    $('swap-btn').style.display = 'none'
+  }
 }
 
-function copyOutput() {
-  if (!window.__lastToon) { showToast('Generate TOON first.', 'error'); return }
-  navigator.clipboard.writeText(window.__lastToon).then(() => showToast('Copied!', 'success'))
+// ============================================================
+// COPY / DOWNLOAD / SWAP
+// ============================================================
+function copyOut() {
+  if (!_lastToon) { toast('Nothing to copy.', 'error'); return }
+  navigator.clipboard.writeText(_lastToon).then(() => toast('Copied!'))
 }
 
-function downloadToon() {
-  if (!window.__lastToon) { showToast('Generate TOON first.', 'error'); return }
-  const blob = new Blob([window.__lastToon], { type: 'text/plain' })
-  const url = URL.createObjectURL(blob)
+function downloadOut() {
+  if (!_lastToon) { toast('Nothing to download.', 'error'); return }
+  const b = new Blob([_lastToon], { type: 'text/plain' })
+  const u = URL.createObjectURL(b)
   const a = document.createElement('a')
-  a.href = url; a.download = 'prompt.toon'; a.click()
-  URL.revokeObjectURL(url)
-  showToast('Downloaded!', 'success')
+  a.href = u; a.download = 'prompt.toon'; a.click()
+  URL.revokeObjectURL(u)
+  toast('Downloaded!')
 }
 
-// ============================================================
-// CONVERTER TAB
-// ============================================================
-function convertJsonToToon() {
-  withLibrary(() => {
-    try {
-      const raw = document.getElementById('conv-json-input').value.trim()
-      if (!raw) { showToast('Paste JSON first.', 'error'); return }
-      const data = JSON.parse(raw)
-      const delimKey = resolveDelimiterKey('conv-delimiter')
-      const indentVal = parseInt(document.getElementById('conv-indent').value)
-
-      const result = window.__toonEncode(data, {
-        delimiter: window.__toonDelimiters[delimKey],
-        indent: indentVal
-      })
-      document.getElementById('conv-output').textContent = result
-      showToast('Converted!', 'success')
-    } catch (e) {
-      showToast(e.message, 'error')
-      document.getElementById('conv-output').textContent = 'Error: ' + e.message
-    }
-  })
-}
-
-function convertToonToJson() {
-  withLibrary(() => {
-    try {
-      const raw = document.getElementById('conv-toon-input').value.trim()
-      if (!raw) { showToast('Paste TOON first.', 'error'); return }
-      const strict = document.getElementById('conv-strict').value === 'true'
-
-      const result = window.__toonDecode(raw, { strict })
-      document.getElementById('conv-output').textContent = JSON.stringify(result, null, 2)
-      showToast('Converted!', 'success')
-    } catch (e) {
-      showToast(e.message, 'error')
-      document.getElementById('conv-output').textContent = 'Error: ' + e.message
-    }
-  })
-}
-
-// ============================================================
-// FORMAT COMPARISON
-// ============================================================
-function compareFormats() {
-  withLibrary(() => {
-    try {
-      const raw = document.getElementById('compare-data').value.trim()
-      if (!raw) { showToast('Enter data first.', 'error'); return }
-      const data = JSON.parse(raw)
-
-      const toonStr = window.__toonEncode(data, { indent: 2 })
-      const jsonPretty = JSON.stringify(data, null, 2)
-      const jsonCompact = JSON.stringify(data)
-
-      const tTokens = estimateTokens(toonStr)
-      const jpTokens = estimateTokens(jsonPretty)
-      const jcTokens = estimateTokens(jsonCompact)
-
-      const savingsPretty = jpTokens > 0 ? Math.round((1 - tTokens / jpTokens) * 100) : 0
-      const savingsCompact = jcTokens > 0 ? Math.round((1 - tTokens / jcTokens) * 100) : 0
-
-      document.getElementById('compare-results').innerHTML = `
-        <div class="compare-box">
-          <h4>TOON</h4>
-          <pre>${escapeHtml(toonStr.slice(0, 800))}${toonStr.length > 800 ? '...' : ''}</pre>
-          <div class="savings">${tTokens} tokens &middot; ${toonStr.length} chars</div>
-        </div>
-        <div class="compare-box">
-          <h4>JSON (pretty)</h4>
-          <pre>${escapeHtml(jsonPretty.slice(0, 800))}${jsonPretty.length > 800 ? '...' : ''}</pre>
-          <div class="savings">${jpTokens} tokens &middot; ${jsonPretty.length} chars</div>
-          <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;margin-top:4px;">TOON saves ${savingsPretty}% vs pretty JSON</div>
-          <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;">TOON saves ${savingsCompact}% vs compact JSON</div>
-        </div>
-      `
-    } catch (e) {
-      showToast(e.message, 'error')
-    }
-  })
+function swapToJson() {
+  const btn = $('swap-btn')
+  if (!btn.dataset.json) return
+  const out = $('toon-output')
+  if (btn.textContent === 'Show as JSON') {
+    out.textContent = btn.dataset.json
+    btn.textContent = 'Show TOON'
+  } else {
+    out.textContent = _lastToon
+    btn.textContent = 'Show as JSON'
+  }
 }
 
 // ============================================================
 // TEMPLATES
 // ============================================================
-const TEMPLATES = [
-  { name: 'User Profiles', desc: 'id, name, email, role, active', json: '[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Charlie Brown","email":"charlie@example.com","role":"user","active":false}]' },
-  { name: 'Product Catalog', desc: 'sku, name, price, stock, category', json: '[{"sku":"A001","name":"Wireless Mouse","price":29.99,"stock":150,"category":"Electronics"},{"sku":"A002","name":"USB-C Hub","price":45,"stock":83,"category":"Accessories"},{"sku":"A003","name":"Mechanical Keyboard","price":129.99,"stock":42,"category":"Electronics"}]' },
-  { name: 'Support Tickets', desc: 'ticket_id, issue, priority, status', json: '[{"ticket_id":1001,"issue":"Login failed on mobile app","priority":"high","status":"open"},{"ticket_id":1002,"issue":"Payment not processed","priority":"urgent","status":"in_progress"},{"ticket_id":1003,"issue":"Feature request: dark mode","priority":"low","status":"closed"}]' },
-  { name: 'Training Examples', desc: 'input, expected_output, difficulty', json: '[{"input":"What is 2+2?","expected_output":"4","difficulty":"easy"},{"input":"Solve for x: 3x+7=22","expected_output":"x=5","difficulty":"medium"},{"input":"Prove the Pythagorean theorem","expected_output":"","difficulty":"hard"}]' },
-  { name: 'API Routes', desc: 'endpoint, method, params, response_type', json: '[{"endpoint":"/api/users","method":"GET","params":"page=1&limit=10","response_type":"array"},{"endpoint":"/api/users","method":"POST","params":"{\\"name\\":\\"John\\"}","response_type":"object"},{"endpoint":"/api/users/1","method":"DELETE","params":"","response_type":"null"}]' },
-  { name: 'Code Review', desc: 'file, lines_changed, severity, reviewer', json: '[{"file":"src/auth.ts","lines_changed":45,"severity":"critical","reviewer":"alice"},{"file":"src/utils.ts","lines_changed":12,"severity":"minor","reviewer":"bob"},{"file":"tests/auth.test.ts","lines_changed":30,"severity":"info","reviewer":"alice"}]' },
-  { name: 'Document Analysis', desc: 'doc_id, title, pages, lang', json: '[{"doc_id":101,"title":"Annual Report 2025","pages":42,"lang":"English","has_tables":true},{"doc_id":102,"title":"Technical Specs","pages":18,"lang":"Japanese","has_tables":false}]' },
-  { name: 'Employee Records', desc: 'id, name, dept, salary, exp', json: '[{"id":1,"name":"Alice","dept":"Engineering","salary":95000,"exp":8},{"id":2,"name":"Bob","dept":"Sales","salary":72000,"exp":5},{"id":3,"name":"Charlie","dept":"Engineering","salary":110000,"exp":12},{"id":4,"name":"Diana","dept":"Marketing","salary":68000,"exp":3}]' },
-]
-
-function loadTemplates() {
-  const grid = document.getElementById('template-grid')
-  grid.innerHTML = TEMPLATES.map((t, i) => `
-    <div class="template-card" onclick="loadTemplate(${i})">
-      <h4>${t.name}</h4>
-      <p>${t.desc}</p>
-    </div>
-  `).join('')
+const TEMPLATES = {
+  users: [{ id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'admin', active: true }, { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'user', active: true }, { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', role: 'user', active: false }],
+  products: [{ sku: 'A001', name: 'Wireless Mouse', price: 29.99, stock: 150, category: 'Electronics' }, { sku: 'A002', name: 'USB-C Hub', price: 45.00, stock: 83, category: 'Accessories' }, { sku: 'A003', name: 'Mechanical Keyboard', price: 129.99, stock: 42, category: 'Electronics' }],
+  tickets: [{ id: 1001, issue: 'Login failed on mobile app', priority: 'high', status: 'open' }, { id: 1002, issue: 'Payment not processed', priority: 'urgent', status: 'in_progress' }, { id: 1003, issue: 'Feature request: dark mode', priority: 'low', status: 'closed' }],
+  training: [{ input: 'What is 2+2?', expected_output: '4', difficulty: 'easy' }, { input: 'Solve 3x+7=22', expected_output: 'x=5', difficulty: 'medium' }, { input: 'Explain recursion', expected_output: 'See example', difficulty: 'hard' }],
+  code: [{ file: 'src/auth.ts', changed: 45, severity: 'critical', reviewer: 'alice' }, { file: 'src/utils.ts', changed: 12, severity: 'minor', reviewer: 'bob' }, { file: 'tests/auth.test.ts', changed: 30, severity: 'info', reviewer: 'alice' }],
+  employees: [{ id: 1, name: 'Alice', dept: 'Engineering', salary: 95000, years: 8 }, { id: 2, name: 'Bob', dept: 'Sales', salary: 72000, years: 5 }, { id: 3, name: 'Charlie', dept: 'Engineering', salary: 110000, years: 12 }, { id: 4, name: 'Diana', dept: 'Marketing', salary: 68000, years: 3 }]
 }
 
-function loadTemplate(idx) {
-  const t = TEMPLATES[idx]
-  document.getElementById('bm-json').checked = true
-  document.getElementById('builder-json').style.display = 'block'
-  document.getElementById('builder-raw').style.display = 'none'
-  document.getElementById('json-input').value = JSON.stringify(JSON.parse(t.json), null, 2)
+function loadTemplate(name) {
+  // Switch to JSON mode
+  document.getElementById('mode-json').checked = true
+  document.getElementById('mode-json').dispatchEvent(new Event('change'))
 
-  // Switch to Builder tab
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
-  document.querySelector('[data-tab="builder"]').classList.add('active')
-  document.getElementById('panel-builder').classList.add('active')
-
-  showToast('Template loaded!', 'success')
+  $('json-input').value = JSON.stringify(TEMPLATES[name], null, 2)
+  toast(`Template "${name}" loaded — click Generate!`)
 }
-
-// ============================================================
-// AUTO-GEN ON FIRST LIBRARY LOAD
-// ============================================================
-let _firstLoadDone = false
-
-// Override the module script's pending handler with auto-demo
-window.__pendingGenerate = function() {
-  if (!_firstLoadDone) {
-    _firstLoadDone = true
-    // Auto-generate with default demo data
-    setTimeout(generatePrompt, 100)
-  }
-}
-
-// Also bind to library load from the module script
-const origObserver = window.__pendingGenerate
-window.__pendingGenerate = function() {
-  if (!_firstLoadDone) {
-    _firstLoadDone = true
-    setTimeout(generatePrompt, 100)
-  }
-}
-
-// ============================================================
-// INIT — set demo data, load templates
-// ============================================================
-document.getElementById('json-input').value = JSON.stringify([
-  { id: 1, name: 'Alice', role: 'admin', active: true },
-  { id: 2, name: 'Bob', role: 'user', active: true },
-  { id: 3, name: 'Charlie', role: 'user', active: false }
-], null, 2)
-
-loadTemplates()
 </script>
 </body>
 </html>
