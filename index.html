@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TOON Prompt Pro — Unlimited TOON Prompt Generator</title>
-<meta name="description" content="Free unlimited TOON (Token-Oriented Object Notation) prompt generator. Convert JSON to TOON, build structured prompts, count tokens, no limits, no login.">
+<meta name="description" content="Free unlimited TOON prompt generator. Convert JSON to TOON, build structured prompts, powered by the official @toon-format/toon library. No limits, no login.">
 <style>
 :root {
   --bg: #0d1117;
@@ -20,24 +20,13 @@
   --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  min-height: 100vh;
-}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
 ::selection { background: #264f78; }
 a { color: var(--accent); }
 .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
 
 /* Header */
-header {
-  border-bottom: 1px solid var(--border);
-  padding: 16px 0;
-  background: var(--surface);
-  position: sticky; top: 0; z-index: 100;
-}
+header { border-bottom: 1px solid var(--border); padding: 16px 0; background: var(--surface); position: sticky; top: 0; z-index: 100; }
 header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -45,6 +34,7 @@ header .container { display: flex; align-items: center; justify-content: space-b
 .header-links { display: flex; gap: 16px; align-items: center; font-size: 0.85rem; }
 .header-links a { color: var(--text-dim); text-decoration: none; }
 .header-links a:hover { color: var(--text); }
+.badge { font-size: 0.7rem; background: #1f2937; color: var(--accent2); padding: 2px 8px; border-radius: 10px; border: 1px solid #2d4a2d; }
 
 /* Tabs */
 .tabs { display: flex; gap: 2px; margin-bottom: 0; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; }
@@ -63,11 +53,7 @@ header .container { display: flex; align-items: center; justify-content: space-b
 
 /* Forms */
 label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; color: var(--text-dim); }
-textarea, input, select {
-  width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
-  border-radius: 6px; color: var(--text); font-size: 0.875rem; font-family: var(--mono);
-  transition: border-color .15s; outline: none;
-}
+textarea, input, select { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.875rem; font-family: var(--mono); transition: border-color .15s; outline: none; }
 textarea:focus, input:focus, select:focus { border-color: var(--accent); }
 textarea { resize: vertical; min-height: 120px; }
 input[type="text"], input[type="number"] { font-family: var(--mono); }
@@ -75,12 +61,7 @@ select { cursor: pointer; }
 .form-group { margin-bottom: 14px; }
 
 /* Buttons */
-.btn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
-  border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer;
-  border: 1px solid var(--border); background: var(--surface); color: var(--text);
-  transition: all .15s; text-decoration: none;
-}
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: all .15s; text-decoration: none; }
 .btn:hover { border-color: var(--accent); color: var(--accent); }
 .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .btn-primary:hover { filter: brightness(1.15); color: #fff; }
@@ -92,44 +73,22 @@ select { cursor: pointer; }
 .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 
 /* Output */
-.output-box {
-  background: #0d1117; border: 1px solid var(--border); border-radius: 6px;
-  padding: 16px; min-height: 100px; font-family: var(--mono); font-size: 0.82rem;
-  line-height: 1.5; white-space: pre-wrap; word-break: break-all; overflow-x: auto;
-  position: relative;
-}
-.output-box .line-num { color: var(--text-dim); user-select: none; padding-right: 16px; text-align: right; }
-.output-box .hl-key { color: var(--accent3); }
-.output-box .hl-str { color: var(--accent2); }
-.output-box .hl-num { color: var(--warning); }
-.output-box .hl-bool { color: var(--accent); }
-.output-box .hl-null { color: var(--text-dim); font-style: italic; }
-.output-box .hl-delim { color: #484f58; }
-.output-box .hl-comment { color: var(--text-dim); font-style: italic; }
+.output-box { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 16px; min-height: 100px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; overflow-x: auto; position: relative; max-height: 500px; overflow-y: auto; }
 
 /* Stats bar */
 .stats { display: flex; gap: 16px; flex-wrap: wrap; margin: 10px 0; font-size: 0.8rem; color: var(--text-dim); }
 .stat { display: flex; align-items: center; gap: 4px; }
 .stat strong { color: var(--text); }
 
-/* Fields builder */
-.field-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-.field-row input { flex: 1; padding: 6px 10px; font-size: 0.82rem; }
-.field-row select { width: auto; min-width: 80px; padding: 6px 8px; font-size: 0.82rem; }
-.field-row .btn { flex-shrink: 0; }
-
 /* Template cards */
 .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-.template-card {
-  padding: 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
-  transition: all .15s; background: var(--bg);
-}
+.template-card { padding: 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all .15s; background: var(--bg); }
 .template-card:hover { border-color: var(--accent); background: rgba(88,166,255,0.05); }
 .template-card h4 { font-size: 0.85rem; margin-bottom: 4px; }
 .template-card p { font-size: 0.78rem; color: var(--text-dim); }
 
 /* Compare section */
-.compare-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 900px) { .compare-grid { grid-template-columns: 1fr; } }
 .compare-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
 .compare-box h4 { font-size: 0.8rem; margin-bottom: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -152,17 +111,22 @@ select { cursor: pointer; }
 .method-radio input:checked + label { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 .method-radio input { display: none; }
 
-/* Helper */
+.util { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.text-dim { color: var(--text-dim); }
+.text-sm { font-size: 0.82rem; }
+.text-xs { font-size: 0.75rem; }
 .mt-8 { margin-top: 8px; }
 .mb-8 { margin-bottom: 8px; }
 .mt-16 { margin-top: 16px; }
 .mb-16 { margin-bottom: 16px; }
-.flex { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.grow { flex: 1; }
-.text-dim { color: var(--text-dim); }
-.text-sm { font-size: 0.82rem; }
-.text-xs { font-size: 0.75rem; }
 code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,255,0.05); padding: 1px 5px; border-radius: 3px; }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--text-dim); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Option row */
+.option-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.option-row label { font-size: 0.8rem; margin-bottom: 0; }
+.option-row select, .option-row input { width: auto; min-width: 100px; padding: 6px 10px; }
 </style>
 </head>
 <body>
@@ -171,11 +135,12 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
 <div class="container">
   <div class="logo">
     <h1>TOON Prompt Pro</h1>
-    <span>v1.0</span>
+    <span class="badge">v2.0</span>
   </div>
   <div class="header-links">
-    <span class="text-xs" id="allFree">100% client-side &middot; no limits &middot; no API key needed</span>
-    <a href="https://github.com/toon-format/toon" target="_blank">TOON Spec</a>
+    <span class="text-xs text-dim" id="headerStatus">100% client-side &middot; powered by @toon-format/toon</span>
+    <a href="https://github.com/toon-format/toon" target="_blank">Official Library</a>
+    <a href="https://github.com/toon-format/spec" target="_blank">TOON Spec</a>
   </div>
 </div>
 </header>
@@ -191,93 +156,60 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
   <button class="tab-btn" data-tab="about">About TOON</button>
 </div>
 
-<!-- ============ TAB 1: PROMPT BUILDER ============ -->
+<!-- ========= TAB 1: PROMPT BUILDER ========= -->
 <div class="tab-panel active" id="panel-builder">
   <div class="card-grid">
     <div>
       <div class="card">
         <h2>Build Your TOON Prompt</h2>
-        <p class="text-sm text-dim mb-16">Define your structured data. Fields are declared once, values fill the rows.</p>
+        <p class="text-sm text-dim mb-16">Paste JSON or write raw data. The official <code>@toon-format/toon</code> encoder handles conversion.</p>
 
         <div class="method-radio">
-          <input type="radio" name="builder-mode" id="bm-struct" value="structured" checked>
-          <label for="bm-struct">Structured</label>
-          <input type="radio" name="builder-mode" id="bm-raw" value="raw">
-          <label for="bm-raw">Raw Text</label>
-          <input type="radio" name="builder-mode" id="bm-json" value="json">
+          <input type="radio" name="builder-mode" id="bm-json" value="json" checked>
           <label for="bm-json">Paste JSON</label>
+          <input type="radio" name="builder-mode" id="bm-raw" value="raw">
+          <label for="bm-raw">Raw Data</label>
         </div>
 
-        <!-- Structured mode -->
-        <div id="builder-structured">
+        <div id="builder-json">
           <div class="form-group">
-            <label>Data Name (array name)</label>
-            <input type="text" id="array-name" value="items" placeholder="e.g. users, products, tasks">
-          </div>
-          <div class="form-group">
-            <label>Fields <span class="text-xs text-dim">(column headers — add at least one)</span></label>
-            <div id="fields-container">
-              <div class="field-row">
-                <input type="text" class="field-name" value="id" placeholder="field name">
-                <select class="field-type">
-                  <option value="number">number</option>
-                  <option value="string" selected>string</option>
-                  <option value="boolean">boolean</option>
-                </select>
-                <button class="btn btn-sm btn-danger" onclick="removeField(this)">&times;</button>
-              </div>
-              <div class="field-row">
-                <input type="text" class="field-name" value="name" placeholder="field name">
-                <select class="field-type">
-                  <option value="number">number</option>
-                  <option value="string" selected>string</option>
-                  <option value="boolean">boolean</option>
-                </select>
-                <button class="btn btn-sm btn-danger" onclick="removeField(this)">&times;</button>
-              </div>
-            </div>
-            <button class="btn btn-sm mt-8" onclick="addField()">+ Add Field</button>
-          </div>
-          <div class="form-group">
-            <label>Delimiter</label>
-            <select id="delimiter-select">
-              <option value=",">Comma (,)</option>
-              <option value="\t">Tab</option>
-              <option value="|">Pipe (|)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Data Rows <span class="text-xs text-dim">(one row per line, values separated by chosen delimiter)</span></label>
-            <textarea id="data-rows" placeholder="1,Alice&#10;2,Bob&#10;3,Charlie" rows="6"></textarea>
+            <label>JSON Data</label>
+            <textarea id="json-input" rows="8" placeholder='[&#10;  { "id": 1, "name": "Alice", "role": "admin" },&#10;  { "id": 2, "name": "Bob", "role": "user" }&#10;]'></textarea>
           </div>
         </div>
 
-        <!-- Raw mode -->
         <div id="builder-raw" style="display:none;">
           <div class="form-group">
-            <label>Describe what you want the TOON prompt to do</label>
-            <textarea id="raw-input" placeholder="I need to generate a TOON-formatted prompt for extracting user information from customer support tickets..." rows="6"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Context / Additional Instructions</label>
-            <textarea id="raw-context" placeholder="Optional: add context, constraints, or examples..." rows="3"></textarea>
+            <label>Raw JavaScript object / array literal</label>
+            <textarea id="raw-input" rows="8" placeholder='{ "users": [{ "id": 1, "name": "Alice" }, { "id": 2, "name": "Bob" }] }'></textarea>
           </div>
         </div>
 
-        <!-- JSON mode -->
-        <div id="builder-json" style="display:none;">
-          <div class="form-group">
-            <label>Paste JSON data</label>
-            <textarea id="json-input" placeholder='[&#10;  { "id": 1, "name": "Alice", "role": "admin" },&#10;  { "id": 2, "name": "Bob", "role": "user" }&#10;]' rows="6"></textarea>
-          </div>
+        <div class="option-row">
+          <label>Delimiter:</label>
+          <select id="builder-delimiter">
+            <option value="comma">Comma (,)</option>
+            <option value="tab">Tab</option>
+            <option value="pipe">Pipe (|)</option>
+          </select>
+          <label>Indent:</label>
+          <select id="builder-indent">
+            <option value="0">0 (compact)</option>
+            <option value="2" selected>2 spaces</option>
+            <option value="4">4 spaces</option>
+          </select>
         </div>
 
         <div class="btn-group">
-          <button class="btn btn-primary" onclick="generateToon()">Generate TOON</button>
+          <button class="btn btn-primary" onclick="generatePrompt()">Generate TOON</button>
           <button class="btn" onclick="copyOutput()">Copy</button>
           <button class="btn" onclick="downloadToon()">Download .toon</button>
-          <button class="btn btn-accent2" onclick="convertToJson()">TOON &rarr; JSON</button>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>Debug / Raw Output</h2>
+        <div class="output-box" id="debug-box" style="font-size:0.75rem;color:var(--text-dim);min-height:40px;max-height:150px;">Ready. Enter JSON and click Generate TOON.</div>
       </div>
     </div>
 
@@ -287,25 +219,24 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
         <div class="stats" id="output-stats">
           <span class="stat">Characters: <strong id="stat-chars">0</strong></span>
           <span class="stat">Tokens (est): <strong id="stat-tokens">0</strong></span>
-          <span class="stat">vs JSON savings: <strong id="stat-savings">0%</strong></span>
+          <span class="stat">vs JSON: <strong id="stat-savings">0%</strong></span>
         </div>
         <div class="output-box" id="toon-output">Your TOON output will appear here...</div>
       </div>
 
       <div class="card" style="display:none" id="json-compare-card">
-        <h2>Equivalent JSON</h2>
-        <p class="text-sm text-dim mb-8">Same data in JSON — compare token usage:</p>
-        <div class="stats" id="json-stats">
-          <span class="stat">Characters: <strong id="json-chars">0</strong></span>
-          <span class="stat">Tokens (est): <strong id="json-tokens">0</strong></span>
+        <h2>Equivalent JSON (minified)</h2>
+        <div class="stats">
+          <span class="stat">Chars: <strong id="jchars">0</strong></span>
+          <span class="stat">Tokens: <strong id="jtokens">0</strong></span>
         </div>
-        <div class="output-box" id="json-compare-output" style="max-height:300px;overflow:auto;"></div>
+        <div class="output-box" id="json-compare-output" style="max-height:150px;font-size:0.75rem;"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============ TAB 2: JSON &harr; TOON CONVERTER ============ -->
+<!-- ========= TAB 2: JSON &harr; TOON CONVERTER ========= -->
 <div class="tab-panel" id="panel-converter">
   <div class="two-col">
     <div class="card">
@@ -314,16 +245,22 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
         <label>Paste JSON</label>
         <textarea id="conv-json-input" rows="8" placeholder='[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]'></textarea>
       </div>
-      <div class="form-group">
-        <label>Delimiter</label>
+      <div class="option-row">
+        <label>Delimiter:</label>
         <select id="conv-delimiter">
-          <option value=",">Comma (,)</option>
-          <option value="\t">Tab</option>
-          <option value="|">Pipe (|)</option>
+          <option value="comma">Comma (,)</option>
+          <option value="tab">Tab</option>
+          <option value="pipe">Pipe (|)</option>
+        </select>
+        <label>Indent:</label>
+        <select id="conv-indent">
+          <option value="0">0 (compact)</option>
+          <option value="2" selected>2</option>
+          <option value="4">4</option>
         </select>
       </div>
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="jsonToToon()">Convert to TOON</button>
+        <button class="btn btn-primary" onclick="convertJsonToToon()">Convert</button>
       </div>
     </div>
     <div class="card">
@@ -332,32 +269,38 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
         <label>Paste TOON</label>
         <textarea id="conv-toon-input" rows="8" placeholder='items[2]{id,name}:&#10;  1,Alice&#10;  2,Bob'></textarea>
       </div>
+      <div class="option-row">
+        <label>Strict:</label>
+        <select id="conv-strict">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="toonToJson()">Convert to JSON</button>
+        <button class="btn btn-primary" onclick="convertToonToJson()">Convert</button>
       </div>
     </div>
   </div>
   <div class="card">
-    <h2>Conversion Result</h2>
+    <h2>Result</h2>
     <div class="output-box" id="conv-output" style="min-height:80px;">Result will appear here...</div>
     <div class="btn-group">
-      <button class="btn" onclick="copyConvOutput()">Copy</button>
+      <button class="btn" onclick="copyEl('conv-output')">Copy</button>
     </div>
   </div>
 </div>
 
-<!-- ============ TAB 3: FORMAT COMPARISON ============ -->
+<!-- ========= TAB 3: FORMAT COMPARISON ========= -->
 <div class="tab-panel" id="panel-compare">
   <div class="card">
     <h2>Token Cost Comparison</h2>
-    <p class="text-sm text-dim mb-16">See how different formats stack up for the same data. TOON saves 30-60%.</p>
+    <p class="text-sm text-dim mb-16">See how much TOON saves vs JSON for the same data.</p>
     <div class="form-group">
-      <label>Sample Data (edit or paste your own)</label>
+      <label>Sample Data (JSON array or object)</label>
       <textarea id="compare-data" rows="6">[
   { "id": 1, "name": "Alice Johnson", "email": "alice@example.com", "role": "admin", "active": true },
   { "id": 2, "name": "Bob Smith", "email": "bob@example.com", "role": "user", "active": true },
-  { "id": 3, "name": "Charlie Brown", "email": "charlie@example.com", "role": "user", "active": false },
-  { "id": 4, "name": "Diana Prince", "email": "diana@example.com", "role": "moderator", "active": true }
+  { "id": 3, "name": "Charlie Brown", "email": "charlie@example.com", "role": "user", "active": false }
 ]</textarea>
     </div>
     <button class="btn btn-primary" onclick="compareFormats()">Compare</button>
@@ -365,16 +308,16 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
   <div class="compare-grid" id="compare-results"></div>
 </div>
 
-<!-- ============ TAB 4: TEMPLATES ============ -->
+<!-- ========= TAB 4: TEMPLATES ========= -->
 <div class="tab-panel" id="panel-templates">
   <div class="card">
     <h2>Prompt Templates</h2>
-    <p class="text-sm text-dim mb-16">Start from a pre-built structure. Click one to load it into the Builder.</p>
+    <p class="text-sm text-dim mb-16">Click a template to load pre-built JSON data into the Builder.</p>
     <div class="template-grid" id="template-grid"></div>
   </div>
 </div>
 
-<!-- ============ TAB 5: ABOUT TOON ============ -->
+<!-- ========= TAB 5: ABOUT TOON ========= -->
 <div class="tab-panel" id="panel-about">
   <div class="card">
     <h2>What is TOON?</h2>
@@ -382,538 +325,364 @@ code { font-family: var(--mono); font-size: 0.82rem; background: rgba(255,255,25
   </div>
   <div class="card">
     <h2>How It Works</h2>
-    <p>JSON repeats field names for every single entry. TOON declares field names once at the top, then lists values in clean rows. The structure stays explicit, but the clutter disappears.</p>
+    <p>JSON repeats field names for every single entry. TOON declares field names once at the top, then lists values in clean rows.</p>
     <pre style="margin-top:10px;font-family:var(--mono);font-size:0.82rem;background:var(--bg);padding:12px;border-radius:6px;border:1px solid var(--border);">
 <span style="color:var(--accent3);">items[2]{id,name,role}:</span>
   <span style="color:var(--warning);">1</span>,Alice,admin
-  <span style="color:var(--warning);">2</span>,Bob,user
-    </pre>
+  <span style="color:var(--warning);">2</span>,Bob,user</pre>
   </div>
   <div class="card">
     <h2>Token Savings</h2>
-    <p>The same data in JSON costs ~30-60% more tokens. For a 100-record product catalog:</p>
+    <p>The same data in JSON costs ~30-60% more tokens.</p>
     <ul style="margin-top:8px;padding-left:20px;font-size:.85rem;color:var(--text-dim);">
-      <li><strong>JSON:</strong> ~2,847 tokens</li>
-      <li><strong>TOON:</strong> ~1,228 tokens</li>
-      <li><strong>Savings:</strong> 1,619 tokens per prompt</li>
+      <li><strong>Tabular (uniform objects):</strong> 40-60% savings</li>
+      <li><strong>Semi-structured:</strong> 15-30% savings</li>
+      <li><strong>Deeply nested:</strong> 30-40% savings</li>
     </ul>
-    <p class="mt-8 text-sm text-dim">Run this 1,000 times daily and you've cut millions of tokens monthly.</p>
   </div>
   <div class="card">
     <h2>Key Benefits</h2>
     <ul style="padding-left:20px;font-size:.85rem;color:var(--text-dim);">
-      <li><strong>Token Cost Reduction</strong> — 30-60% lower API bills</li>
-      <li><strong>Performance Improvement</strong> — fewer tokens = faster responses</li>
-      <li><strong>Improved Accuracy</strong> — structured format reduces ambiguity and hallucinations</li>
-      <li><strong>Lossless</strong> — convert between JSON and TOON without losing data</li>
-      <li><strong>Human-Readable</strong> — clean rows, no clutter</li>
+      <li><strong>Lower API bills</strong> — fewer tokens = less cost</li>
+      <li><strong>Faster responses</strong> — fewer tokens processed</li>
+      <li><strong>Better accuracy</strong> — structured format reduces ambiguity</li>
+      <li><strong>Lossless round-trip</strong> — convert between JSON and TOON freely</li>
+      <li><strong>Open standard</strong> — <a href="https://github.com/toon-format/spec">github.com/toon-format/spec</a></li>
     </ul>
-  </div>
-  <div class="card">
-    <h2>TOON Format Spec</h2>
-    <p>TOON is an open specification. Full details at <a href="https://github.com/toon-format/spec" target="_blank">github.com/toon-format/spec</a>.</p>
   </div>
 </div>
 
 </div><!-- /container -->
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Load @toon-format/toon library from CDN -->
+<script type="module">
+import { encode, decode } from 'https://cdn.jsdelivr.net/npm/@toon-format/toon@1.2.0/+esm'
+import { DELIMITERS } from 'https://cdn.jsdelivr.net/npm/@toon-format/toon@1.2.0/+esm'
+
+// Expose to global scope for onclick handlers
+window.__toonEncode = encode
+window.__toonDecode = decode
+window.__toonDelimiters = DELIMITERS
+document.getElementById('headerStatus').textContent = 'Library loaded &middot; @toon-format/toon v1.2.0'
+
+// Re-run the last successful generation if any
+if (window.__pendingGenerate) window.__pendingGenerate()
+
+console.log('TOON library loaded:', Object.keys(DELIMITERS))
+</script>
 
 <script>
 // ============================================================
-// STATE
+// UTILITIES
 // ============================================================
-let lastToonOutput = '';
-let lastJsonOutput = '';
+function estimateTokens(text) { return Math.ceil(text.length / 4) }
 
-// ============================================================
-// TEMPLATES
-// ============================================================
-const TEMPLATES = [
-  { name: 'User Profiles', desc: 'id, name, email, role, active', fields: ['id', 'name', 'email', 'role', 'active'], types: ['number','string','string','string','boolean'], rows: `1,Alice Johnson,alice@example.com,admin,true\n2,Bob Smith,bob@example.com,user,true\n3,Charlie Brown,charlie@example.com,user,false` },
-  { name: 'Product Catalog', desc: 'sku, name, price, stock, category', fields: ['sku', 'name', 'price', 'stock', 'category'], types: ['string','string','number','number','string'], rows: `A001,Wireless Mouse,29.99,150,Electronics\nA002,USB-C Hub,45.00,83,Accessories\nA003,Mechanical Keyboard,129.99,42,Electronics` },
-  { name: 'Customer Support', desc: 'ticket_id, issue, priority, status', fields: ['ticket_id', 'issue', 'priority', 'status'], types: ['number','string','string','string'], rows: `1001,Login failed on mobile app,high,open\n1002,Payment not processed,urgent,in_progress\n1003,Feature request: dark mode,low,closed` },
-  { name: 'Training Examples', desc: 'input, expected_output, difficulty', fields: ['input', 'expected_output', 'difficulty'], types: ['string','string','string'], rows: `"What is 2+2?",4,easy\n"Solve for x: 3x+7=22",x=5,medium\n"Prove the Pythagorean theorem",,hard` },
-  { name: 'API Response Format', desc: 'endpoint, method, params, response_type', fields: ['endpoint', 'method', 'params', 'response_type'], types: ['string','string','string','string'], rows: `/api/users,GET,page=1&limit=10,array\n/api/users/POST,"{""name"":""John""}",object\n/api/users/1,DELETE,,null` },
-  { name: 'Document Analysis', desc: 'doc_id, title, page_count, language, contains_tables', fields: ['doc_id', 'title', 'page_count', 'language', 'contains_tables'], types: ['number','string','number','string','boolean'], rows: `101,Annual Report 2025,42,English,true\n102,Technical Specs,18,Japanese,false\n103,Terms of Service,9,English,true` },
-  { name: 'Code Review', desc: 'file, lines_changed, severity, reviewer', fields: ['file', 'lines_changed', 'severity', 'reviewer'], types: ['string','number','string','string'], rows: `src/auth.ts,45,critical,alice\nsrc/utils.ts,12,minor,bob\ntests/auth.test.ts,30,info,alice` },
-  { name: 'Data Extraction', desc: 'field, source_format, target_format, validation_rules', fields: ['field', 'source_format', 'target_format', 'validation_rules'], types: ['string','string','string','string'], rows: `email,"free text",email,regex: ^\\\\S+@\\\\S+$\nphone,"free text",E.164,"regex: ^\\\\+[1-9]\\\\d{6,14}$"\ndate,MM/DD/YYYY,ISO 8601,"range: 1900-01-01 to 2099-12-31"` },
-];
+function showToast(msg, type) {
+  const el = document.getElementById('toast')
+  el.textContent = msg; el.className = 'toast ' + type + ' show'
+  clearTimeout(el._timeout); el._timeout = setTimeout(() => el.classList.remove('show'), 2500)
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+}
+
+function copyEl(id) {
+  const text = document.getElementById(id).textContent
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!', 'success'))
+}
 
 // ============================================================
 // TAB SYSTEM
 // ============================================================
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
-  });
-});
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+    btn.classList.add('active')
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active')
+  })
+})
 
 // ============================================================
 // BUILDER MODE SWITCH
 // ============================================================
 document.querySelectorAll('input[name="builder-mode"]').forEach(radio => {
   radio.addEventListener('change', () => {
-    document.getElementById('builder-structured').style.display = radio.value === 'structured' ? 'block' : 'none';
-    document.getElementById('builder-raw').style.display = radio.value === 'raw' ? 'block' : 'none';
-    document.getElementById('builder-json').style.display = radio.value === 'json' ? 'block' : 'none';
-  });
-});
+    document.getElementById('builder-json').style.display = radio.value === 'json' ? 'block' : 'none'
+    document.getElementById('builder-raw').style.display = radio.value === 'raw' ? 'block' : 'none'
+  })
+})
 
 // ============================================================
-// FIELD MANAGEMENT
+// RESOLVE DELIMITER
 // ============================================================
-function addField(name, type) {
-  const c = document.getElementById('fields-container');
-  const row = document.createElement('div');
-  row.className = 'field-row';
-  row.innerHTML = `<input type="text" class="field-name" value="${name || ''}" placeholder="field name">
-<select class="field-type">
-  <option value="number">number</option>
-  <option value="string" ${type === 'string' || !type ? 'selected' : ''}>string</option>
-  <option value="boolean">boolean</option>
-</select>
-<button class="btn btn-sm btn-danger" onclick="removeField(this)">&times;</button>`;
-  c.appendChild(row);
+function resolveDelimiter(selectId) {
+  const val = document.getElementById(selectId).value
+  if (val === 'comma') return ','
+  if (val === 'tab') return '\t'
+  if (val === 'pipe') return '|'
+  return ','
 }
-function removeField(el) {
-  const row = el.closest('.field-row');
-  if (document.querySelectorAll('.field-row').length > 1) row.remove();
+
+function resolveDelimiterKey(selectId) {
+  return document.getElementById(selectId).value // 'comma', 'tab', 'pipe'
 }
 
 // ============================================================
-// TOKEN ESTIMATOR
+// WAIT FOR LIBRARY + GENERATE
 // ============================================================
-function estimateTokens(text) {
-  // Rough estimate: ~4 chars per token for English text
-  return Math.ceil(text.length / 4);
+function withLibrary(fn) {
+  if (window.__toonEncode) return fn()
+  window.__pendingGenerate = fn
+  document.getElementById('debug-box').textContent = 'Loading @toon-format/toon library from CDN...'
 }
 
 // ============================================================
-// JSON → TOON CONVERTER (core)
+// GENERATE PROMPT (Builder tab)
 // ============================================================
-function jsonToToonString(jsonStr, delim) {
-  let data;
-  try { data = JSON.parse(jsonStr); } catch (e) { throw new Error('Invalid JSON: ' + e.message); }
-  
-  // Normalize to array
-  if (!Array.isArray(data)) data = [data];
-  if (data.length === 0) return '[]';
-
-  // Extract all unique keys in order
-  const keys = [];
-  const seen = new Set();
-  data.forEach(item => {
-    if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
-      Object.keys(item).forEach(k => { if (!seen.has(k)) { seen.add(k); keys.push(k); } });
-    }
-  });
-
-  if (keys.length === 0) {
-    // Array of primitives
-    const vals = data.map(v => formatToonValue(v)).join(delim === '\t' ? '\t' : delim === '|' ? '|' : ',');
-    return `${'items'}[${data.length}]: ${vals}`;
-  }
-
-  const d = delim === '\t' ? '\t' : delim === '|' ? '|' : ',';
-  const fieldList = keys.join(d);
-  const arrayName = 'items';
-  
-  let header = `${arrayName}[${data.length}]${d === ',' ? '' : d === '\t' ? '\t' : '|'}{${fieldList}}:`;
-  const rows = data.map(item => {
-    if (typeof item !== 'object' || item === null) return formatToonValue(item);
-    return keys.map(k => formatToonValue(item[k])).join(d);
-  });
-
-  const body = rows.map(r => '  ' + r).join('\n');
-  return header + '\n' + body;
-}
-
-function formatToonValue(val) {
-  if (val === null || val === undefined) return 'null';
-  if (typeof val === 'boolean') return val ? 'true' : 'false';
-  if (typeof val === 'number') return String(val);
-  if (typeof val === 'string') {
-    // Quote only if contains delimiter chars, newlines, or starts with special
-    if (val.includes(',') || val.includes('\t') || val.includes('|') || val.includes('\n') || val.includes('"') || val === '' || val.startsWith('[') || val.startsWith('{')) {
-      return '"' + val.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
-    }
-    return val;
-  }
-  if (Array.isArray(val)) return '[' + val.map(formatToonValue).join(',') + ']';
-  if (typeof val === 'object') return JSON.stringify(val);
-  return String(val);
-}
-
-// ============================================================
-// TOON → JSON CONVERTER (basic)
-// ============================================================
-function toonToJsonString(toonStr) {
-  const lines = toonStr.split('\n').filter(l => l.trim());
-  if (lines.length === 0) return '{}';
-  if (lines.length === 1 && lines[0].trim() === '[]') return '[]';
-
-  // Parse header: arrayName[N]{fields}:  or [N]{fields}:  or key[N]:
-  const headerMatch = lines[0].match(/^(?:(\w+))?\[(\d+)\](?:([\t|]?)\{([^}]+)\})?\s*:/);
-  if (!headerMatch) {
-    // Try object format: key: value
-    return parseToonObject(lines);
-  }
-
-  const arrayLen = parseInt(headerMatch[2]);
-  const fieldsRaw = headerMatch[4];
-  const fields = fieldsRaw ? fieldsRaw.split(headerMatch[3] || ',').map(f => f.trim()) : null;
-  
-  const result = [];
-  const dataLines = lines.slice(1).filter(l => !l.startsWith('#'));
-  
-  for (const line of dataLines) {
-    const trimmed = line.trim().replace(/^-\s*/, '');
-    if (fields) {
-      const vals = splitDelim(trimmed, headerMatch[3] || ',');
-      const obj = {};
-      fields.forEach((f, i) => {
-        obj[f] = parseToonPrimitive(vals[i] || '');
-      });
-      result.push(obj);
-    } else {
-      result.push(parseToonPrimitive(trimmed));
-    }
-  }
-
-  return JSON.stringify(result, null, 2);
-}
-
-function splitDelim(str, delim) {
-  const result = [];
-  let current = '';
-  let inQuote = false;
-  for (let i = 0; i < str.length; i++) {
-    const c = str[i];
-    if (c === '"') { inQuote = !inQuote; current += c; }
-    else if (c === delim && !inQuote) { result.push(current.trim()); current = ''; }
-    else { current += c; }
-  }
-  result.push(current.trim());
-  return result;
-}
-
-function parseToonPrimitive(val) {
-  val = val.trim();
-  if (val === 'null' || val === '') return null;
-  if (val === 'true') return true;
-  if (val === 'false') return false;
-  if (/^-?\d+(\.\d+)?$/.test(val)) return val.includes('.') ? parseFloat(val) : parseInt(val, 10);
-  if (val.startsWith('"') && val.endsWith('"')) {
-    return val.slice(1,-1).replace(/\\"/g,'"').replace(/\\n/g,'\n').replace(/\\\\/g,'\\');
-  }
-  return val;
-}
-
-function parseToonObject(lines) {
-  const obj = {};
-  for (const line of lines) {
-    const m = line.match(/^(\w+)\s*:\s*(.+)$/);
-    if (m) obj[m[1]] = parseToonPrimitive(m[2]);
-  }
-  return JSON.stringify(obj, null, 2);
-}
-
-// ============================================================
-// GENERATE TOON (Builder)
-// ============================================================
-function generateToon() {
-  const mode = document.querySelector('input[name="builder-mode"]:checked').value;
-  
-  try {
-    let output = '';
-
-    if (mode === 'structured') {
-      const arrayName = document.getElementById('array-name').value.trim() || 'items';
-      const fields = [...document.querySelectorAll('.field-name')].map(el => el.value.trim()).filter(Boolean);
-      const rawRows = document.getElementById('data-rows').value.trim();
-      const delimEl = document.getElementById('delimiter-select');
-      const delim = delimEl.value === '\t' ? '\t' : delimEl.value === '|' ? '|' : ',';
-
-      if (fields.length === 0) { showToast('Add at least one field.', 'error'); return; }
-      if (!rawRows) { showToast('Enter at least one data row.', 'error'); return; }
-
-      const rows = rawRows.split('\n').filter(r => r.trim());
-      const dDisplay = delim === '\t' ? '\t' : delim;
-      const delimSymbol = delim === '\t' ? '\t' : delim === '|' ? '|' : '';
-      const header = `${arrayName}[${rows.length}]${delimSymbol}{${fields.join(dDisplay)}}:`;
-      const body = rows.map(r => '  ' + r.trim()).join('\n');
-      output = header + '\n' + body;
-    }
-    else if (mode === 'raw') {
-      const raw = document.getElementById('raw-input').value.trim();
-      const ctx = document.getElementById('raw-context').value.trim();
-      if (!raw) { showToast('Describe what you want the prompt to do.', 'error'); return; }
-      output = `# TOON Prompt — ${raw.slice(0, 50)}${raw.length > 50 ? '...' : ''}\n`;
-      output += `# Context: ${ctx || 'General purpose'}\n`;
-      output += '---\n';
-      output += '# Your structured TOON data goes here\n';
-      output += '# Define fields using the Structured mode or paste JSON\n';
-      output += '---\n';
-      output += '# Example structure:\n';
-      output += 'task[1]{description,output_format,constraints}:\n';
-      output += `  ${raw.slice(0, 60)}${raw.length > 60 ? '...' : ''},text,none\n`;
-    }
-    else if (mode === 'json') {
-      const jsonStr = document.getElementById('json-input').value.trim();
-      if (!jsonStr) { showToast('Paste JSON data first.', 'error'); return; }
-      output = jsonToToonString(jsonStr, ',');
-    }
-
-    lastToonOutput = output;
-    document.getElementById('toon-output').textContent = output;
-    updateStats(output);
-
-    // Also show JSON equivalent
+function generatePrompt() {
+  withLibrary(() => {
     try {
-      const jsonEquivalent = toonToJsonString(output);
-      lastJsonOutput = jsonEquivalent;
-      document.getElementById('json-compare-output').textContent = jsonEquivalent;
-      document.getElementById('json-chars').textContent = jsonEquivalent.length;
-      document.getElementById('json-tokens').textContent = estimateTokens(jsonEquivalent);
-      document.getElementById('json-compare-card').style.display = 'block';
-    } catch(e) {
-      document.getElementById('json-compare-card').style.display = 'none';
+      const mode = document.querySelector('input[name="builder-mode"]:checked').value
+      let data
+
+      if (mode === 'json') {
+        const raw = document.getElementById('json-input').value.trim()
+        if (!raw) { showToast('Paste JSON data first.', 'error'); return }
+        data = JSON.parse(raw)
+      } else {
+        const raw = document.getElementById('raw-input').value.trim()
+        if (!raw) { showToast('Enter raw data first.', 'error'); return }
+        // Use Function constructor for safe eval of JS literals (objects, arrays, primitives)
+        data = new Function('"use strict"; return (' + raw + ')')()
+      }
+
+      const delimKey = resolveDelimiterKey('builder-delimiter')
+      const indentVal = parseInt(document.getElementById('builder-indent').value)
+
+      const options = {
+        delimiter: window.__toonDelimiters[delimKey],
+        indent: indentVal,
+        keyFolding: 'off'
+      }
+
+      const toonStr = window.__toonEncode(data, options)
+      const jsonStr = JSON.stringify(data)
+
+      document.getElementById('debug-box').textContent =
+        'Input type: ' + (Array.isArray(data) ? 'Array[' + data.length + ']' : typeof data) +
+        ' | Delimiter: ' + delimKey +
+        ' | Indent: ' + indentVal +
+        ' | Library: @toon-format/toon v1.2.0'
+
+      displayResult(toonStr, jsonStr)
+
+    } catch (e) {
+      document.getElementById('debug-box').textContent = 'Error: ' + e.message
+      showToast(e.message, 'error')
     }
-
-    showToast('TOON generated!', 'success');
-  } catch (e) {
-    showToast(e.message, 'error');
-  }
+  })
 }
 
-// ============================================================
-// UPDATE STATS
-// ============================================================
-function updateStats(toonStr) {
-  const chars = toonStr.length;
-  const tokens = estimateTokens(toonStr);
-  document.getElementById('stat-chars').textContent = chars;
-  document.getElementById('stat-tokens').textContent = tokens;
+function displayResult(toonStr, jsonStr) {
+  const out = document.getElementById('toon-output')
+  out.textContent = toonStr
 
-  // Estimate JSON token savings
-  try {
-    const jsonEquivalent = toonToJsonString(toonStr);
-    const jsonTokens = estimateTokens(jsonEquivalent);
-    const savings = jsonTokens > 0 ? Math.round((1 - tokens / jsonTokens) * 100) : 0;
-    document.getElementById('stat-savings').textContent = savings + '%';
-  } catch(e) {
-    document.getElementById('stat-savings').textContent = 'N/A';
-  }
+  const tChars = toonStr.length
+  const tTokens = estimateTokens(toonStr)
+  document.getElementById('stat-chars').textContent = tChars
+  document.getElementById('stat-tokens').textContent = tTokens
+
+  // Show JSON comparison
+  const jChars = jsonStr.length
+  const jTokens = estimateTokens(jsonStr)
+  document.getElementById('jchars').textContent = jChars
+  document.getElementById('jtokens').textContent = jTokens
+  document.getElementById('json-compare-output').textContent = jsonStr
+  document.getElementById('json-compare-card').style.display = 'block'
+
+  // Savings
+  const savings = jTokens > 0 ? Math.round((1 - tTokens / jTokens) * 100) : 0
+  document.getElementById('stat-savings').textContent = savings + '%'
+
+  // Store for copy/download
+  window.__lastToon = toonStr
 }
 
-// ============================================================
-// COPY / DOWNLOAD
-// ============================================================
 function copyOutput() {
-  if (!lastToonOutput) { showToast('Nothing to copy.', 'error'); return; }
-  navigator.clipboard.writeText(lastToonOutput).then(() => showToast('Copied!', 'success'));
+  if (!window.__lastToon) { showToast('Generate TOON first.', 'error'); return }
+  navigator.clipboard.writeText(window.__lastToon).then(() => showToast('Copied!', 'success'))
 }
 
 function downloadToon() {
-  if (!lastToonOutput) { showToast('Nothing to download.', 'error'); return; }
-  const blob = new Blob([lastToonOutput], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'prompt.toon';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Downloaded!', 'success');
-}
-
-function copyConvOutput() {
-  const el = document.getElementById('conv-output');
-  navigator.clipboard.writeText(el.textContent).then(() => showToast('Copied!', 'success'));
+  if (!window.__lastToon) { showToast('Generate TOON first.', 'error'); return }
+  const blob = new Blob([window.__lastToon], { type: 'text/plain' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url; a.download = 'prompt.toon'; a.click()
+  URL.revokeObjectURL(url)
+  showToast('Downloaded!', 'success')
 }
 
 // ============================================================
 // CONVERTER TAB
 // ============================================================
-function jsonToToon() {
-  const json = document.getElementById('conv-json-input').value.trim();
-  const delim = document.getElementById('conv-delimiter').value;
-  if (!json) { showToast('Paste JSON first.', 'error'); return; }
-  try {
-    const result = jsonToToonString(json, delim);
-    document.getElementById('conv-output').textContent = result;
-    showToast('Converted!', 'success');
-  } catch(e) {
-    showToast(e.message, 'error');
-  }
+function convertJsonToToon() {
+  withLibrary(() => {
+    try {
+      const raw = document.getElementById('conv-json-input').value.trim()
+      if (!raw) { showToast('Paste JSON first.', 'error'); return }
+      const data = JSON.parse(raw)
+      const delimKey = resolveDelimiterKey('conv-delimiter')
+      const indentVal = parseInt(document.getElementById('conv-indent').value)
+
+      const result = window.__toonEncode(data, {
+        delimiter: window.__toonDelimiters[delimKey],
+        indent: indentVal
+      })
+      document.getElementById('conv-output').textContent = result
+      showToast('Converted!', 'success')
+    } catch (e) {
+      showToast(e.message, 'error')
+      document.getElementById('conv-output').textContent = 'Error: ' + e.message
+    }
+  })
 }
 
-function toonToJson() {
-  const toon = document.getElementById('conv-toon-input').value.trim();
-  if (!toon) { showToast('Paste TOON first.', 'error'); return; }
-  try {
-    const result = toonToJsonString(toon);
-    document.getElementById('conv-output').textContent = result;
-    showToast('Converted!', 'success');
-  } catch(e) {
-    showToast('Error parsing TOON: ' + e.message, 'error');
-  }
+function convertToonToJson() {
+  withLibrary(() => {
+    try {
+      const raw = document.getElementById('conv-toon-input').value.trim()
+      if (!raw) { showToast('Paste TOON first.', 'error'); return }
+      const strict = document.getElementById('conv-strict').value === 'true'
+
+      const result = window.__toonDecode(raw, { strict })
+      document.getElementById('conv-output').textContent = JSON.stringify(result, null, 2)
+      showToast('Converted!', 'success')
+    } catch (e) {
+      showToast(e.message, 'error')
+      document.getElementById('conv-output').textContent = 'Error: ' + e.message
+    }
+  })
 }
 
 // ============================================================
-// COMPARE TAB
+// FORMAT COMPARISON
 // ============================================================
 function compareFormats() {
-  const raw = document.getElementById('compare-data').value.trim();
-  if (!raw) { showToast('Enter data first.', 'error'); return; }
+  withLibrary(() => {
+    try {
+      const raw = document.getElementById('compare-data').value.trim()
+      if (!raw) { showToast('Enter data first.', 'error'); return }
+      const data = JSON.parse(raw)
 
-  let jsonStr;
-  // Try as JSON first
-  try {
-    JSON.parse(raw);
-    jsonStr = raw;
-  } catch(e) {
-    // Treat as plain text
-    jsonStr = JSON.stringify(raw.split('\n').filter(Boolean).map(l => ({ text: l })));
-  }
+      const toonStr = window.__toonEncode(data, { indent: 2 })
+      const jsonPretty = JSON.stringify(data, null, 2)
+      const jsonCompact = JSON.stringify(data)
 
-  const jsonTokens = estimateTokens(jsonStr);
-  const jsonChars = jsonStr.length;
+      const tTokens = estimateTokens(toonStr)
+      const jpTokens = estimateTokens(jsonPretty)
+      const jcTokens = estimateTokens(jsonCompact)
 
-  // Normalize JSON for display
-  let jsonPretty;
-  try { jsonPretty = JSON.stringify(JSON.parse(jsonStr), null, 2); } catch(e) { jsonPretty = jsonStr; }
+      const savingsPretty = jpTokens > 0 ? Math.round((1 - tTokens / jpTokens) * 100) : 0
+      const savingsCompact = jcTokens > 0 ? Math.round((1 - tTokens / jcTokens) * 100) : 0
 
-  // Generate TOON
-  let toonStr;
-  try { toonStr = jsonToToonString(jsonStr, ','); } catch(e) { toonStr = 'Error converting to TOON'; }
-  const toonTokens = estimateTokens(toonStr);
-  const toonChars = toonStr.length;
-
-  // Generate plain text version (naive)
-  let textStr;
-  try {
-    const data = JSON.parse(jsonStr);
-    textStr = Array.isArray(data) ? data.map(item => 
-      typeof item === 'object' ? Object.values(item).join(', ') : String(item)
-    ).join('\n') : JSON.stringify(data);
-  } catch(e) { textStr = jsonStr; }
-  const textTokens = estimateTokens(textStr);
-
-  const savings = jsonTokens > 0 ? Math.round((1 - toonTokens / jsonTokens) * 100) : 0;
-  const vsText = textTokens > 0 ? Math.round((1 - toonTokens / textTokens) * 100) : 0;
-
-  document.getElementById('compare-results').innerHTML = `
-    <div class="compare-box">
-      <h4>JSON</h4>
-      <pre>${escapeHtml(jsonPretty.slice(0, 800))}${jsonPretty.length > 800 ? '...' : ''}</pre>
-      <div class="savings">${jsonTokens} tokens &middot; ${jsonChars} chars</div>
-    </div>
-    <div class="compare-box">
-      <h4>TOON</h4>
-      <pre>${escapeHtml(toonStr.slice(0, 600))}${toonStr.length > 600 ? '...' : ''}</pre>
-      <div class="savings">${toonTokens} tokens &middot; ${toonChars} chars</div>
-      <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;margin-top:4px;">▼ ${savings}% vs JSON</div>
-    </div>
-    <div class="compare-box">
-      <h4>Plain Text</h4>
-      <pre>${escapeHtml(textStr.slice(0, 600))}${textStr.length > 600 ? '...' : ''}</pre>
-      <div class="savings">${textTokens} tokens &middot; ${textStr.length} chars</div>
-      <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;margin-top:4px;">▼ ${vsText}% vs Plain Text</div>
-    </div>
-  `;
+      document.getElementById('compare-results').innerHTML = `
+        <div class="compare-box">
+          <h4>TOON</h4>
+          <pre>${escapeHtml(toonStr.slice(0, 800))}${toonStr.length > 800 ? '...' : ''}</pre>
+          <div class="savings">${tTokens} tokens &middot; ${toonStr.length} chars</div>
+        </div>
+        <div class="compare-box">
+          <h4>JSON (pretty)</h4>
+          <pre>${escapeHtml(jsonPretty.slice(0, 800))}${jsonPretty.length > 800 ? '...' : ''}</pre>
+          <div class="savings">${jpTokens} tokens &middot; ${jsonPretty.length} chars</div>
+          <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;margin-top:4px;">TOON saves ${savingsPretty}% vs pretty JSON</div>
+          <div style="font-size:0.8rem;color:var(--accent2);font-weight:600;">TOON saves ${savingsCompact}% vs compact JSON</div>
+        </div>
+      `
+    } catch (e) {
+      showToast(e.message, 'error')
+    }
+  })
 }
 
 // ============================================================
-// TEMPLATES TAB
+// TEMPLATES
 // ============================================================
+const TEMPLATES = [
+  { name: 'User Profiles', desc: 'id, name, email, role, active', json: '[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Charlie Brown","email":"charlie@example.com","role":"user","active":false}]' },
+  { name: 'Product Catalog', desc: 'sku, name, price, stock, category', json: '[{"sku":"A001","name":"Wireless Mouse","price":29.99,"stock":150,"category":"Electronics"},{"sku":"A002","name":"USB-C Hub","price":45,"stock":83,"category":"Accessories"},{"sku":"A003","name":"Mechanical Keyboard","price":129.99,"stock":42,"category":"Electronics"}]' },
+  { name: 'Support Tickets', desc: 'ticket_id, issue, priority, status', json: '[{"ticket_id":1001,"issue":"Login failed on mobile app","priority":"high","status":"open"},{"ticket_id":1002,"issue":"Payment not processed","priority":"urgent","status":"in_progress"},{"ticket_id":1003,"issue":"Feature request: dark mode","priority":"low","status":"closed"}]' },
+  { name: 'Training Examples', desc: 'input, expected_output, difficulty', json: '[{"input":"What is 2+2?","expected_output":"4","difficulty":"easy"},{"input":"Solve for x: 3x+7=22","expected_output":"x=5","difficulty":"medium"},{"input":"Prove the Pythagorean theorem","expected_output":"","difficulty":"hard"}]' },
+  { name: 'API Routes', desc: 'endpoint, method, params, response_type', json: '[{"endpoint":"/api/users","method":"GET","params":"page=1&limit=10","response_type":"array"},{"endpoint":"/api/users","method":"POST","params":"{\\"name\\":\\"John\\"}","response_type":"object"},{"endpoint":"/api/users/1","method":"DELETE","params":"","response_type":"null"}]' },
+  { name: 'Code Review', desc: 'file, lines_changed, severity, reviewer', json: '[{"file":"src/auth.ts","lines_changed":45,"severity":"critical","reviewer":"alice"},{"file":"src/utils.ts","lines_changed":12,"severity":"minor","reviewer":"bob"},{"file":"tests/auth.test.ts","lines_changed":30,"severity":"info","reviewer":"alice"}]' },
+  { name: 'Document Analysis', desc: 'doc_id, title, pages, lang', json: '[{"doc_id":101,"title":"Annual Report 2025","pages":42,"lang":"English","has_tables":true},{"doc_id":102,"title":"Technical Specs","pages":18,"lang":"Japanese","has_tables":false}]' },
+  { name: 'Employee Records', desc: 'id, name, dept, salary, exp', json: '[{"id":1,"name":"Alice","dept":"Engineering","salary":95000,"exp":8},{"id":2,"name":"Bob","dept":"Sales","salary":72000,"exp":5},{"id":3,"name":"Charlie","dept":"Engineering","salary":110000,"exp":12},{"id":4,"name":"Diana","dept":"Marketing","salary":68000,"exp":3}]' },
+]
+
 function loadTemplates() {
-  const grid = document.getElementById('template-grid');
+  const grid = document.getElementById('template-grid')
   grid.innerHTML = TEMPLATES.map((t, i) => `
     <div class="template-card" onclick="loadTemplate(${i})">
       <h4>${t.name}</h4>
       <p>${t.desc}</p>
     </div>
-  `).join('');
+  `).join('')
 }
 
 function loadTemplate(idx) {
-  const t = TEMPLATES[idx];
-  // Switch to structured mode
-  document.getElementById('bm-struct').checked = true;
-  document.getElementById('builder-structured').style.display = 'block';
-  document.getElementById('builder-raw').style.display = 'none';
-  document.getElementById('builder-json').style.display = 'none';
-
-  // Set array name
-  document.getElementById('array-name').value = t.name.toLowerCase().replace(/\s+/g, '_');
-
-  // Clear and rebuild fields
-  const c = document.getElementById('fields-container');
-  c.innerHTML = '';
-  t.fields.forEach((f, i) => {
-    addField(f, t.types[i] || 'string');
-  });
-
-  // Set rows
-  document.getElementById('data-rows').value = t.rows;
+  const t = TEMPLATES[idx]
+  document.getElementById('bm-json').checked = true
+  document.getElementById('builder-json').style.display = 'block'
+  document.getElementById('builder-raw').style.display = 'none'
+  document.getElementById('json-input').value = JSON.stringify(JSON.parse(t.json), null, 2)
 
   // Switch to Builder tab
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector('[data-tab="builder"]').classList.add('active');
-  document.getElementById('panel-builder').classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+  document.querySelector('[data-tab="builder"]').classList.add('active')
+  document.getElementById('panel-builder').classList.add('active')
 
-  showToast('Template loaded!', 'success');
+  showToast('Template loaded!', 'success')
 }
 
 // ============================================================
-// CONVERT TO JSON (from Builder output)
+// AUTO-GEN ON FIRST LIBRARY LOAD
 // ============================================================
-function convertToJson() {
-  if (!lastToonOutput) { showToast('Generate TOON first.', 'error'); return; }
-  try {
-    const json = toonToJsonString(lastToonOutput);
-    document.getElementById('json-compare-output').textContent = json;
-    document.getElementById('json-chars').textContent = json.length;
-    document.getElementById('json-tokens').textContent = estimateTokens(json);
-    document.getElementById('json-compare-card').style.display = 'block';
-    showToast('Converted to JSON!', 'success');
-  } catch(e) {
-    showToast('Could not convert: ' + e.message, 'error');
+let _firstLoadDone = false
+
+// Override the module script's pending handler with auto-demo
+window.__pendingGenerate = function() {
+  if (!_firstLoadDone) {
+    _firstLoadDone = true
+    // Auto-generate with default demo data
+    setTimeout(generatePrompt, 100)
+  }
+}
+
+// Also bind to library load from the module script
+const origObserver = window.__pendingGenerate
+window.__pendingGenerate = function() {
+  if (!_firstLoadDone) {
+    _firstLoadDone = true
+    setTimeout(generatePrompt, 100)
   }
 }
 
 // ============================================================
-// TOAST
+// INIT — set demo data, load templates
 // ============================================================
-function showToast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast ' + type + ' show';
-  clearTimeout(el._timeout);
-  el._timeout = setTimeout(() => el.classList.remove('show'), 2500);
-}
+document.getElementById('json-input').value = JSON.stringify([
+  { id: 1, name: 'Alice', role: 'admin', active: true },
+  { id: 2, name: 'Bob', role: 'user', active: true },
+  { id: 3, name: 'Charlie', role: 'user', active: false }
+], null, 2)
 
-// ============================================================
-// ESCAPE HTML
-// ============================================================
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-loadTemplates();
-
-// Initial demo
-document.getElementById('data-rows').value = '1,Alice\n2,Bob\n3,Charlie';
-generateToon();
+loadTemplates()
 </script>
 </body>
 </html>
